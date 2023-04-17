@@ -11,7 +11,7 @@ DEFAULT			=	\033[0m
 #REVERSEBG		[7;		#HIDDEN			[8;		#STRIKETHROUGH	[9;
 NAME	= philo
 SOURCESPATH = ./
-SOURCESLIST = sophos.c arithmos.c plithysmos.c kyklos.c
+SOURCESLIST = sophos.c arithmos.c plithysmos.c kyklos.c makaronia.c hronos.c
 SOURCES = $(addprefix $(SOURCESPATH), $(SOURCESLIST))
 OBJECTS = $(SOURCES:.c=.o)
 
@@ -69,7 +69,7 @@ re:		fclean all
 #	$(COMPILE) $(FLAGS) $(OBJECTSBONUS) -o $(NAMEBONUS)
 
 run:	$(NAME)
-	./$(NAME) 400 200 200
+	./$(NAME) 2 800 200 200
 
 vrun:	$(NAME)
 	valgrind --leak-check=full -s -v ./$(NAME) 400 200 200

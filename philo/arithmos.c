@@ -6,7 +6,7 @@
 /*   By: cnascime <cnascime@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 01:54:08 by cnascime          #+#    #+#             */
-/*   Updated: 2023/04/09 06:43:21 by cnascime         ###   ########.fr       */
+/*   Updated: 2023/04/17 04:47:23 by cnascime         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,22 +19,22 @@ int	validation(int argc, char **argv)
 	int	j;
 
 	i = 1;
-	j = 0;
 	if (argc < 5 || argc > 6)
-		return (1);
+		return (0);
 	while (i < argc)
 	{
-		if (!(argv[i][j] == '+') || (ft_isdigit(argv[i][j])))
-			return (1);
+		j = 0;
+		if (!(argv[i][j] == '+' || (ft_isdigit(argv[i][j]))))
+			return (0);
 		while (argv[i][j])
 		{
 			if (!(ft_isdigit(argv[i][j])))
-				return (1);
+				return (0);
 			j++;
 		}
 		i++;
 	}
-	return (0);
+	return (1);
 }
 
 int	ft_isdigit(int c)
@@ -78,7 +78,7 @@ int	ft_atoi(const char *str)
 
 	i = 0;
 	number = 0;
-	while (ft_isspace(str[i]) || str[i] == '+' || str[i] == '-' || str[i])
+	while (ft_isspace(str[i]) || str[i] == '+' || str[i] == '-')
 		i++;
 	while (str[i] != '\0' && ft_isdigit(str[i]))
 	{

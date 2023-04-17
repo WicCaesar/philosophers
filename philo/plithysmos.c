@@ -6,62 +6,63 @@
 /*   By: cnascime <cnascime@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 02:31:06 by cnascime          #+#    #+#             */
-/*   Updated: 2023/04/12 05:07:36 by cnascime         ###   ########.fr       */
+/*   Updated: 2023/04/17 05:03:29 by cnascime         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "sophos.h"
 
-// ? Calling philosophers gurus so it doesn't trespass the limit of 80 columns.
-// Adds a philosopher to the end of the list.
-void	addguru(t_philosophers **guru, t_philosophers *newguru)
+// Adds a page to the end of the guest list (journal).
+void	addpage(t_journal **page, t_journal *newpage)
 {
-	if (!newguru)
+	if (!newpage)
 		return ;
-	if (!guru)
-		*guru = newguru;
+	if (!page)
+		*page = newpage;
 	else
-		lastphilosopher(*guru)->next = newguru;
+		lastpage(*page)->next = newpage;
 }
 
-t_philosophers	*newphilosopher(int id)
+t_journal	*newpage(int id, t_timers *timers, t_mutexes *mutexes)
 {
-	t_philosophers	*philosopher;
+	t_journal	*page;
 
-	philosopher = malloc(sizeof(t_philosophers));
-	philosopher->id = (pthread_t)id;
-	philosopher->meals = 0;
-	pthread_mutex_init(&philosopher->forks, NULL); // ! como atribuir quantidade de garfos na mutex?
-	philosopher->next = NULL;
-	return (philosopher);
+	page = malloc(sizeof(t_journal));
+	page->philosopher = (pthread_t)id;
+	page->hastheirownfork = 1;
+	page->timers = *&timers;
+	page->mutexes = *&mutexes;
+	pthread_mutex_init(&page->forksmutex, NULL);
+	page->next = NULL;
+	return (page);
 }
 
-t_philosophers	*lastphilosopher(t_philosophers *philosopher)
+t_journal	*lastpage(t_journal *page)
 {
-	if (!philosopher)
+	if (!page)
 		return (NULL);
-	while (philosopher->next)
-		philosopher = philosopher->next;
-	return (philosopher);
+	while (page->next)
+		page = page->next;
+	return (page);
 }
 
-// While the assessed philosopher is a descendant, not the ancestor, free them.
-// When there's no one left, free the ancestor (reference).
-void	clearphilosopher(t_philosophers *philosopher)
+// While the assessed philosophers are descendants, not the ancestor, free them.
+// When there's no one left, free the ancestor (our reference).
+void	clearpage(t_journal *page)
 {
-	t_philosophers	*temp;
-	t_philosophers	*ancestor;
+	t_journal	*temp;
+	t_journal	*ancestor;
 
-	if (!philosopher)
+	if (!page)
 		return ;
-	ancestor = philosopher;
-	while (philosopher->next != ancestor)
+	ancestor = page;
+	while (page->next != ancestor)
 	{
-		temp = philosopher->next;
-		pthread_mutex_destroy(&philosopher->forks);
-		free(philosopher);
-		philosopher = temp;
+		temp = page->next;
+		pthread_mutex_destroy(&page->forksmutex);
+		free(page);
+		page = temp;
 	}
-	pthread_mutex_destroy(&philosopher->forks);
-	free(philosopher);
+	pthread_mutex_destroy(&page->forksmutex);
+	free(page);
 }

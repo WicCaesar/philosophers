@@ -1,14 +1,18 @@
-#MAKEFLAGS = --silent
+MAKEFLAGS = --silent
 #BLACK			= 	\033[1;30m			#RED			=	\033[1;31m
 GREEN			=	\033[3;32m
 #YELLOW      	=	\033[1;33m			#BLUE			=	\033[1;34m
 #MAGENTA		=	\033[1;35m			#CYAN			=	\033[1;36m
-#WHITE			=	\033[1;37m
+#WHITE			=	\033[4;37m
 DEFAULT			=	\033[0m
 #ONELINEUP		=	"\033[1A"			#ERASELINE		=	"\033[K"
 #NORMAL			[0;		#BOLD			[1;		#DIM			[2;
 #ITALIC			[3;		#UNDERLINED		[4;		#BLINK			[5;
 #REVERSEBG		[7;		#HIDDEN			[8;		#STRIKETHROUGH	[9;
+# To format, use the following syntax: \033[STYLE;TEXT;BACKGROUNDm
+# For example, to print a bold red text on a blue background, use: \033[1;31;44m
+# To combine styles, use a semicolon: \033[1;4;31m (bold + underlined, red text)
+# Rainbow: \033[1;31mR\033[1;33mY\033[1;32mG\033[1;36mC\033[1;34mB\033[1;35mM
 NAME	= philo
 SOURCESPATH = ./
 SOURCESLIST = sophos.c arithmos.c plithysmos.c kyklos.c makaronia.c hronos.c
@@ -45,6 +49,14 @@ all:	$(NAME)
 
 $(NAME):	$(OBJECTS)
 	$(COMPILE) $(FLAGS) $(OBJECTS) -lpthread -o $(NAME)
+#	echo "$(GREEN)Pronto!$(DEFAULT) Execute $(WHITE)./philo convidados inanição\
+#	jantar sesta repeteco$(DEFAULT)"
+#	echo "\033[3mconvidados = número de filósofos à mesa"
+#	echo " inanição  = tempo em milissegundos que aguentam sem comer"
+#	echo "  jantar   = tempo em milissegundos que demoram comendo o espaguete"
+#	echo "   sesta   = tempo em milissegundos que levam descansando"
+#	echo " repeteco  = quantidade de pratos que convidados precisam repetir"
+#	echo "\033[4mApenas valores numéricos.$(DEFAULT)"
 #* -lpthread links the pthread library, which is necessary for multithreading.
 
 # '@' hides the clutter from the terminal.

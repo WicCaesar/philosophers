@@ -6,13 +6,13 @@
 /*   By: cnascime <cnascime@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 01:54:08 by cnascime          #+#    #+#             */
-/*   Updated: 2023/04/17 04:47:23 by cnascime         ###   ########.fr       */
+/*   Updated: 2023/04/18 07:27:59 by cnascime         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "sophos.h"
 
-// Simply checks if every parameter is a valid number.
+// Simply checks if every argument is a valid number.
 int	validation(int argc, char **argv)
 {
 	int	i;
@@ -26,12 +26,16 @@ int	validation(int argc, char **argv)
 		j = 0;
 		if (!(argv[i][j] == '+' || (ft_isdigit(argv[i][j]))))
 			return (0);
+		if (argv[i][0] == '+')
+			j++;
 		while (argv[i][j])
 		{
 			if (!(ft_isdigit(argv[i][j])))
 				return (0);
 			j++;
 		}
+		if (ft_atoi(argv[i]) == 0)
+			return (0);
 		i++;
 	}
 	return (1);

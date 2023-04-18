@@ -6,7 +6,7 @@
 /*   By: cnascime <cnascime@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/29 06:17:13 by cnascime          #+#    #+#             */
-/*   Updated: 2023/04/17 04:51:23 by cnascime         ###   ########.fr       */
+/*   Updated: 2023/04/18 01:00:03 by cnascime         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,20 +126,15 @@ int	main(int argc, char **argv)
 // Setting up timers.
 int	loadtimers(int guests, t_timers *timers, char **argv)
 {
-	printf("guests: %d \t\t argv[1]: %s\n", guests, argv[1]); // ! apagar
 	timers->starvation = ft_atoi(argv[2]);
-	printf("starvation: %ld \t argv[2]: %s\n", timers->starvation, argv[2]); // ! apagar
 	timers->dining = ft_atoi(argv[3]);
-	printf("dining: %ld \t\t argv[3]: %s\n", timers->dining, argv[3]); // ! apagar
 	timers->dreaming = ft_atoi(argv[4]);
-	printf("dreaming: %ld \t\t argv[4]: %s\n", timers->dreaming, argv[4]); // ! apagar
 	if (guests < 1
 		|| timers->starvation < 0 || timers->dining < 0 || timers->dreaming < 0)
 		return (0);
 	if (argv[5])
 	{
 		timers->mandatorymeals = ft_atoi(argv[5]);
-		printf("mandatorymeals: %d \t\t argv[5]: %s\n", timers->mandatorymeals, argv[5]); // ! apagar
 		if (timers->mandatorymeals < 1)
 			return (0);
 	}
@@ -152,18 +147,10 @@ int	loadtimers(int guests, t_timers *timers, char **argv)
 // Unnecessary to start cantanymore because variables in a struct are already 0.
 // stillhungry are the guests that haven't had the minimum amount of meals.
 // pthread_mutex_init is used because the common macro PTHREAD_MUTEX_INITIALIZER
-// is forbidden. The pthread_mutex_init function is called with the address of
-// the mutex variable and the address of the mutex attribute variable, which
-// sets the mutex type. The mutex type can be set to PTHREAD_MUTEX_NORMAL,
-// PTHREAD_MUTEX_ERRORCHECK, PTHREAD_MUTEX_RECURSIVE, or PTHREAD_MUTEX_DEFAULT.
-// The default mutex type is PTHREAD_MUTEX_NORMAL. The PTHREAD_MUTEX_NORMAL
-// mutex type does not detect deadlock. The PTHREAD_MUTEX_ERRORCHECK mutex type
-// detects deadlock by returning an error if a thread tries to lock a mutex that
-// it already owns. The PTHREAD_MUTEX_RECURSIVE mutex type allows a thread to
-// lock a mutex that it already owns.
+// is forbidden. The second argument of pthread_mutex_init function is the 
+// attribute. It is set to NULL because we want the default mutex type. Why tho?
 void	loadmutexes(int guests, t_mutexes *mutexes)
 {
-	// mutexes->cantanymore = 0; // ! delete before sending
 	mutexes->stillhungry = guests;
 	pthread_mutex_init(&mutexes->printmutex, NULL);
 	pthread_mutex_init(&mutexes->bellymutex, NULL);
@@ -200,16 +187,14 @@ int	sitattable(int guests, t_journal *journal)
 	philosopher = malloc(sizeof(pthread_t) * guests);
 	while (i < guests)
 	{
-		if (pthread_create(&philosopher[i], NULL, &routine, &journal) != 0)
-			return (0); // ! retornar erro?
-		journal = journal->next;
+		pthread_create(&philosopher[i], NULL, &routine, (void *)journal);
+		journal = journal->next; // next guest
 		i++;
 	}
 	i = 0;
 	while (i < guests)
 	{
-		if (pthread_join(philosopher[i], NULL) != 0) //! testar sem if
-			return (0); // ! retornar erro?
+		pthread_join(philosopher[i], NULL); // wait for the thread to end
 		i++;
 	}
 	return (1);

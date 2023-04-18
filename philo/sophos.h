@@ -6,7 +6,7 @@
 /*   By: cnascime <cnascime@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/29 08:14:11 by cnascime          #+#    #+#             */
-/*   Updated: 2023/04/17 04:02:16 by cnascime         ###   ########.fr       */
+/*   Updated: 2023/04/18 07:16:04 by cnascime         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,18 +16,24 @@
 #ifndef SOPHOS_H
 # define SOPHOS_H
 
-//# include <bits/pthreadtypes.h> // De onde saiu isso?
 # include <stdio.h> // printf, perror
 # include <stdlib.h> // malloc, free, exit
 # include <unistd.h> // usleep
 # include <pthread.h> // pthread, mutex
 # include <sys/time.h> // gettimeofday
 
-# define EATS "%ld %ld is eating\n"
+/*# define THINKS "%ld %ld is thinking\n"
 # define HASAFORK "%ld %ld has taken a fork\n"
-# define THINKS "%ld %ld is thinking\n"
+# define EATS "%ld %ld is eating\n"
 # define SLEEPS "%ld %ld is sleeping\n"
-# define DIED "%ld %ld died\n"
+# define DIED "\033[3;36m%ld %ld died\n"*/
+
+
+# define THINKS "\033[3;36m%ld %ld is thinking\033[0m\n"
+# define HASAFORK "\033[2;3;32m%ld %ld has taken a fork\033[0m\n"
+# define EATS "\033[1;32m%ld %ld is eating\033[0m\n"
+# define SLEEPS "\033[2;37m%ld %ld is sleeping\033[0m\n"
+# define DIED "\033[1;37m%ld \033[1;36m%ld \033[1;31md\033[1;33mi\033[1;32me\033[1;35md\033[0m\n"
 
 /*
 ! Each philosopher should be a thread.
@@ -43,13 +49,12 @@ typedef struct s_journal
 	int						hastheirownfork; //! flag para saber se filósofo está com seu garfo
 	pthread_mutex_t			forksmutex;
 	int						meals;
-	long					birth; // ! renomear para birth ou start, talvez?
-	long					death;
+	long int				birth; // ! renomear para birth ou start, talvez?
+	long int				death;
 	struct s_timers			*timers;
 	struct s_mutexes		*mutexes;
 	struct s_journal		*next;
-}	t_journal; //! colocar timers nessa struct?
-// ! LAST MEAL??? RIGHT FORK AND LEFT FORK???
+}	t_journal;
 
 // ! ESTUDAR DATA RACE E DEADLOCK
 // TODO ESTUDAR DATA RACE E DEADLOCK
@@ -61,10 +66,10 @@ typedef struct s_journal
 
 typedef struct s_timers //! renomear  variáveis abaixo, talvez?
 {
-	long	dining; //? The time it takes for a philosopher to eat. During that time, they will need to hold two forks.
-	long	dreaming; //? The time a philosopher will spend sleeping.
-	long	starvation; //? If a philosopher didn’t start eating time_to_die milliseconds since the beginning of their last meal or the beginning of the simulation, they die.
-	int		mandatorymeals;
+	long int	dining; //? The time it takes for a philosopher to eat. During that time, they will need to hold two forks.
+	long int	dreaming; //? The time a philosopher will spend sleeping.
+	long int	starvation; //? If a philosopher didn’t start eating time_to_die milliseconds since the beginning of their last meal or the beginning of the simulation, they die.
+	int			mandatorymeals;
 }	t_timers;
 
 // The variable stillhungry starts with the same number of philosophers.
@@ -92,16 +97,16 @@ t_journal	*lastpage(t_journal *page);
 void		clearpage(t_journal *page);
 int			sitattable(int guests, t_journal *philosophers);
 void		*routine(void *journal);
-long		ms(void);
+long int	ms(void);
 void		inform(t_journal *philosopher, char *message);
-int			think(t_journal *philosopher);
-int			eat(t_journal *philosopher);
+void		think(t_journal *philosopher);
+void		eat(t_journal *philosopher);
 int			forksinhand(t_journal *philosopher);
 int			grabfork(t_journal *philosopher, t_journal *forkowner);
 void		returnforks(t_journal *philosopher);
 int			fullbelly(t_journal *philosopher);
-int			dream(t_journal *philosopher);
-int			siesta(t_journal *philosopher, long timer);
+void		dream(t_journal *philosopher);
+void		siesta(t_journal *philosopher, long int timer);
 int			takepulse(t_journal *philosopher);
 void		unloadmutexes(t_mutexes *mutexes, t_journal *philosopher);
 int			ft_atoi(const char *str);

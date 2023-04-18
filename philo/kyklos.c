@@ -6,7 +6,7 @@
 /*   By: cnascime <cnascime@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 18:09:22 by cnascime          #+#    #+#             */
-/*   Updated: 2023/04/17 03:51:06 by cnascime         ###   ########.fr       */
+/*   Updated: 2023/04/17 08:50:31 by cnascime         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,16 +25,15 @@ void	*routine(void *journal)
 	philosopher->death = philosopher->birth + philosopher->timers->starvation;
 	if (philosopher->philosopher % 2 == 0)
 		usleep(philosopher->timers->dining * 1000); // pares dormem
-	while (1)
+	// só os ímpares estão coisando
+	while (!philosopher->mutexes->cantanymore)
 	{
 		think(philosopher);
-		if (eat(philosopher))
+		eat(philosopher);
+		returnforks(philosopher); // ! mover para eat?
+		if (fullbelly(philosopher)) // ! mover para eat?
 			return (NULL);
-		returnforks(philosopher);
-		if (fullbelly(philosopher))
-			return (NULL);
-		if (dream(philosopher))
-			return (NULL);
+		dream(philosopher);
 	}
 	return (NULL);
 }
@@ -61,25 +60,27 @@ pares vão dormir e ímpares vão pegar os garfos soltos
 // If the philosopher is able to take both forks, the function returns 0.
 // If the philosopher is not able to take both forks, the function returns 1.
 // ! Atualizar acima, já está diferente (dividi em outras funções).
-int	eat(t_journal *philosopher)
+void	eat(t_journal *philosopher)
 {
 	if (forksinhand(philosopher) != 2)
-		return (0);
+		return ;
 	inform(philosopher, EATS);
-	philosopher->death = ms() + philosopher->timers->starvation;
 	philosopher->meals++;
-	return (siesta(philosopher, philosopher->timers->dining));
+	philosopher->death = ms() + philosopher->timers->starvation;
+	siesta(philosopher, philosopher->timers->dining);
+	return ;
 }
 
 // Not necessary anymore.
-int	think(t_journal *philosopher)
+void	think(t_journal *philosopher)
 {
 	inform(philosopher, THINKS);
-	return (1);
+	return ;
 }
 
-int	dream(t_journal *philosopher)
+void	dream(t_journal *philosopher)
 {
 	inform(philosopher, SLEEPS);
-	return (siesta(philosopher, philosopher->timers->dreaming));
+	siesta(philosopher, philosopher->timers->dreaming);
+	return ;
 }

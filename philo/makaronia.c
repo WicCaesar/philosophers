@@ -6,7 +6,7 @@
 /*   By: cnascime <cnascime@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/14 07:05:15 by cnascime          #+#    #+#             */
-/*   Updated: 2023/04/17 03:52:05 by cnascime         ###   ########.fr       */
+/*   Updated: 2023/04/17 08:36:40 by cnascime         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int	grabfork(t_journal *philosopher, t_journal *forkowner)
 	pthread_mutex_lock(&forkowner->forksmutex);
 	if (forkowner->hastheirownfork)
 	{
-		forkowner->hastheirownfork = 0; // não tem mais o garfo
+		forkowner->hastheirownfork = 0; // não tem mais o garfo momentaneamente
 		inform(philosopher, HASAFORK);
 		pthread_mutex_unlock(&forkowner->forksmutex);
 		return (1);
@@ -76,7 +76,7 @@ void	returnforks(t_journal *philosopher)
 int	fullbelly(t_journal *philosopher)
 {
 	pthread_mutex_lock(&philosopher->mutexes->bellymutex);
-	if (philosopher->meals >= philosopher->timers->mandatorymeals) // se o filósofo já comeu o suficiente
+	if (philosopher->meals == philosopher->timers->mandatorymeals) // se o filósofo já comeu o suficiente
 	{
 		philosopher->mutexes->stillhungry--; // diminui o número de filósofos ainda com fome
 		if (philosopher->mutexes->stillhungry == 0) // se não tem mais ninguém com fome, o jantar está encerrado

@@ -6,7 +6,7 @@
 /*   By: cnascime <cnascime@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 02:31:06 by cnascime          #+#    #+#             */
-/*   Updated: 2023/04/17 05:03:29 by cnascime         ###   ########.fr       */
+/*   Updated: 2023/04/18 07:20:31 by cnascime         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,19 @@
 // Adds a page to the end of the guest list (journal).
 void	addpage(t_journal **page, t_journal *newpage)
 {
+	t_journal	*penultimate;
+
 	if (!newpage)
 		return ;
-	if (!page)
+	if (!*page)
+	{
 		*page = newpage;
-	else
-		lastpage(*page)->next = newpage;
+		return ;
+	}
+	penultimate = lastpage(*page);
+	penultimate->next = newpage;
 }
+// Simpler syntax: lastpage(*page)->next = newpage;
 
 t_journal	*newpage(int id, t_timers *timers, t_mutexes *mutexes)
 {

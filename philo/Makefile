@@ -1,4 +1,4 @@
-MAKEFLAGS = --silent
+#MAKEFLAGS = --silent
 #BLACK			= 	\033[1;30m			#RED			=	\033[1;31m
 GREEN			=	\033[3;32m
 #YELLOW      	=	\033[1;33m			#BLUE			=	\033[1;34m
@@ -30,8 +30,20 @@ OBJECTS = $(SOURCES:.c=.o)
 #endif
 
 COMPILE	= cc
-FLAGS	= -Wall -Wextra -Werror -g
+FLAGS	= -Wall -Wextra -Werror -O3
+# Replaced -g with -O3 to optimise the code (removing debug symbols).
+# -O3 is faster than -g and -O2, but it takes longer to compile.
 REMOVE	= rm -f
+SANITIZER = -fsanitize=address -fno-omit-frame-pointer
+# -fsanitize=address to detect memory errors AND leaks.
+# -fsanitize=memory to detect ONLY memory errors. (MacOS only?)
+# -fsanitize=leak to detect ONLY memory leaks.
+# -fsanitize=thread to detect thread errors.
+# -fsanitize=integer to detect integer errors. (MacOS only?)
+# -fsanitize=undefined to detect undefined behavior.
+# To combine, separate with commas: -fsanitize=address,thread,undefined
+# The difference between -fno-omit-frame-pointer and -static-libasan is that
+# the first one is used to compile, while the second one is used to link.
 
 # In order to pass an argument to the compiler, use the -D flag and set a
 # variable such as $(X) and when calling make, add X = 3, for instance.
@@ -48,7 +60,7 @@ REMOVE	= rm -f
 all:	$(NAME)
 
 $(NAME):	$(OBJECTS)
-	$(COMPILE) $(FLAGS) $(OBJECTS) -lpthread -o $(NAME)
+	$(COMPILE) $(FLAGS) $(OBJECTS) $(SANITIZER) -lpthread -o $(NAME)
 #	echo "$(GREEN)Pronto!$(DEFAULT) Execute $(WHITE)./philo convidados inanição\
 #	jantar sesta repeteco$(DEFAULT)"
 #	echo "\033[3mconvidados = número de filósofos à mesa"
@@ -81,12 +93,28 @@ re:		fclean all
 #	$(COMPILE) $(FLAGS) $(OBJECTSBONUS) -o $(NAMEBONUS)
 
 run:	$(NAME)
-	./$(NAME) 2 800 200 200
+	./$(NAME) 4 500 200 2147483647
 
 vrun:	$(NAME)
-	valgrind --leak-check=full -s -v ./$(NAME) 400 200 200
+	valgrind --leak-check=full -s -v ./$(NAME) 5 800 200 200 7
+
+#sanitizer:	$(NAME)
+#	gcc -g -fsanitize=address -fno-omit-frame-pointer ./$(NAME) 4 200 210 200
 
 rerun:	re run
 
 # Ignores files that could eventually be named after any of these rules.
 .PHONY:		all clean fclean re
+
+# ./philo 2 800 200 200 // Nobody dies
+#./philo 5 800 200 200 // Nobody dies
+#./philo 5 800 200 200 7 // Simulation stops when all philosophers eat 7 times
+#./philo 4 410 200 200 // Nobody dies
+#./philo 4 310 200 200 // One philosopher dies
+#./philo 4 500 200 1.2 // Invalid arguments
+#./philo 4 0 200 200 // Invalid arguments
+#./philo 4 -500 200 200 // Invalid arguments
+#./philo 4 500 200 2147483647 // One philopher dies after 500ms
+#./philo 4 2147483647 200 200 // Nobody dies
+#./philo 4 214748364732 200 200 // Invalid arguments
+#./philo 4 200 210 200 // One philosopher dies, information must come before 210

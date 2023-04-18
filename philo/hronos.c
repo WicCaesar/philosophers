@@ -6,7 +6,7 @@
 /*   By: cnascime <cnascime@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/14 07:37:17 by cnascime          #+#    #+#             */
-/*   Updated: 2023/04/18 07:10:25 by cnascime         ###   ########.fr       */
+/*   Updated: 2023/04/18 09:08:08 by cnascime         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ long int	ms(void)
 	return (miliseconds);
 }
 
-void	siesta(t_journal *philosopher, long int timer)
+void	siesta(t_journal *philosopher, long int timer) // ! problema está aqui!
 {
 	long int	nap;
 
@@ -35,7 +35,7 @@ void	siesta(t_journal *philosopher, long int timer)
 	while (ms() < nap) // enquanto não dormiu o tempo necessário
 	{
 		if (takepulse(philosopher) == 0) // se o filósofo morreu no meio do sono
-			break ; // ! o problema está aqui
+			break ;
 	}
 	usleep(philosopher->timers->dining); // ! testar com mais
 }

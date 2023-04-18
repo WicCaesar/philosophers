@@ -6,7 +6,7 @@
 /*   By: cnascime <cnascime@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/29 08:14:11 by cnascime          #+#    #+#             */
-/*   Updated: 2023/04/18 07:16:04 by cnascime         ###   ########.fr       */
+/*   Updated: 2023/04/18 09:12:34 by cnascime         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,13 +21,6 @@
 # include <unistd.h> // usleep
 # include <pthread.h> // pthread, mutex
 # include <sys/time.h> // gettimeofday
-
-/*# define THINKS "%ld %ld is thinking\n"
-# define HASAFORK "%ld %ld has taken a fork\n"
-# define EATS "%ld %ld is eating\n"
-# define SLEEPS "%ld %ld is sleeping\n"
-# define DIED "\033[3;36m%ld %ld died\n"*/
-
 
 # define THINKS "\033[3;36m%ld %ld is thinking\033[0m\n"
 # define HASAFORK "\033[2;3;32m%ld %ld has taken a fork\033[0m\n"

@@ -6,7 +6,7 @@
 /*   By: cnascime <cnascime@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/29 06:17:13 by cnascime          #+#    #+#             */
-/*   Updated: 2023/04/18 01:00:03 by cnascime         ###   ########.fr       */
+/*   Updated: 2023/04/18 09:10:35 by cnascime         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,7 +130,7 @@ int	loadtimers(int guests, t_timers *timers, char **argv)
 	timers->dining = ft_atoi(argv[3]);
 	timers->dreaming = ft_atoi(argv[4]);
 	if (guests < 1
-		|| timers->starvation < 0 || timers->dining < 0 || timers->dreaming < 0)
+		|| timers->starvation < 1 || timers->dining < 1 || timers->dreaming < 1)
 		return (0);
 	if (argv[5])
 	{
@@ -197,6 +197,7 @@ int	sitattable(int guests, t_journal *journal)
 		pthread_join(philosopher[i], NULL); // wait for the thread to end
 		i++;
 	}
+	free(philosopher);
 	return (1);
 }
 // The first argument of the pthread_create function is the address of the

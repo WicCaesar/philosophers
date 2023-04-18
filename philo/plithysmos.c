@@ -6,11 +6,11 @@
 /*   By: cnascime <cnascime@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 02:31:06 by cnascime          #+#    #+#             */
-/*   Updated: 2023/04/18 09:10:16 by cnascime         ###   ########.fr       */
+/*   Updated: 2023/04/18 10:47:17 by cnascime         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "sophos.h"
+#include "sophoi.h"
 
 // Adds a page to the end of the guest list (journal).
 void	addpage(t_journal **page, t_journal *newpage)

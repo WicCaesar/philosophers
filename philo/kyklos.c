@@ -6,11 +6,11 @@
 /*   By: cnascime <cnascime@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 18:09:22 by cnascime          #+#    #+#             */
-/*   Updated: 2023/04/17 08:50:31 by cnascime         ###   ########.fr       */
+/*   Updated: 2023/04/18 10:47:09 by cnascime         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "sophos.h"
+#include "sophoi.h"
 
 // The journal passed on thread creation becomes each philosopher's very own.
 // The philosopher's birth is recorded and their lifespan is set.

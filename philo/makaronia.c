@@ -6,11 +6,11 @@
 /*   By: cnascime <cnascime@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/14 07:05:15 by cnascime          #+#    #+#             */
-/*   Updated: 2023/04/17 08:36:40 by cnascime         ###   ########.fr       */
+/*   Updated: 2023/04/18 10:47:12 by cnascime         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "sophos.h"
+#include "sophoi.h"
 
 //TODO Funções estritamente ligadas ao ato de comer (pegar garfos, usar, soltar)
 

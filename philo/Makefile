@@ -15,7 +15,7 @@ DEFAULT			=	\033[0m
 # Rainbow: \033[1;31mR\033[1;33mY\033[1;32mG\033[1;36mC\033[1;34mB\033[1;35mM
 NAME	= philo
 SOURCESPATH	= ./
-SOURCESLIST	= sophos.c arithmos.c plithysmos.c kyklos.c makaronia.c hronos.c
+SOURCESLIST	= sophoi.c arithmoi.c plithysmos.c kyklos.c makaronia.c chronos.c
 SOURCES = $(addprefix $(SOURCESPATH), $(SOURCESLIST))
 OBJECTS = $(SOURCES:.c=.o)
 
@@ -107,7 +107,8 @@ rerun:	re run
 # Ignores files that could eventually be named after any of these rules.
 .PHONY:		all clean fclean re
 
-# ./philo 2 800 200 200 // Nobody dies
+#./philo 1 1000 200 200 // Dies because cannot grab another fork
+#./philo 2 800 200 200 // Nobody dies
 #./philo 5 800 200 200 // Nobody dies
 #./philo 5 800 200 200 7 // Simulation stops when all philosophers eat 7 times
 #./philo 4 410 200 200 // Nobody dies
@@ -119,3 +120,4 @@ rerun:	re run
 #./philo 4 2147483647 200 200 // Nobody dies
 #./philo 4 214748364732 200 200 // Invalid arguments
 #./philo 4 200 210 200 // One philosopher dies, information must come before 210
+#./philo 4 410 200 200 4 // One philosopher dies

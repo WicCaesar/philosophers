@@ -1,4 +1,4 @@
-#MAKEFLAGS = --silent
+MAKEFLAGS = --silent
 #BLACK			= 	\033[1;30m			#RED			=	\033[1;31m
 GREEN			=	\033[3;32m
 #YELLOW      	=	\033[1;33m			#BLUE			=	\033[1;34m
@@ -14,8 +14,8 @@ DEFAULT			=	\033[0m
 # To combine styles, use a semicolon: \033[1;4;31m (bold + underlined, red text)
 # Rainbow: \033[1;31mR\033[1;33mY\033[1;32mG\033[1;36mC\033[1;34mB\033[1;35mM
 NAME	= philo
-SOURCESPATH = ./
-SOURCESLIST = sophos.c arithmos.c plithysmos.c kyklos.c makaronia.c hronos.c
+SOURCESPATH	= ./
+SOURCESLIST	= sophos.c arithmos.c plithysmos.c kyklos.c makaronia.c hronos.c
 SOURCES = $(addprefix $(SOURCESPATH), $(SOURCESLIST))
 OBJECTS = $(SOURCES:.c=.o)
 
@@ -34,14 +34,17 @@ FLAGS	= -Wall -Wextra -Werror -O3
 # Replaced -g with -O3 to optimise the code (removing debug symbols).
 # -O3 is faster than -g and -O2, but it takes longer to compile.
 REMOVE	= rm -f
-SANITIZER = -fsanitize=address -fno-omit-frame-pointer
-# -fsanitize=address to detect memory errors AND leaks.
-# -fsanitize=memory to detect ONLY memory errors. (MacOS only?)
-# -fsanitize=leak to detect ONLY memory leaks.
+VALGRIND	= valgrind --leak-check=full -s -v --track-origins=yes
+# -s to suppress the summary, -v to show the full report.
+# --track-origins=yes to show where the memory was allocated.
+SANITIZER	= -fsanitize=thread -fno-omit-frame-pointer
+# -fsanitize=address to detect memory errors AND leaks.	(doesn't execute)
+# -fsanitize=memory to detect ONLY memory errors.	(MacOS only?)
+# -fsanitize=leak to detect ONLY memory leaks.			(executes program)
 # -fsanitize=thread to detect thread errors.
-# -fsanitize=integer to detect integer errors. (MacOS only?)
+# -fsanitize=integer to detect integer errors.		(MacOS only?)
 # -fsanitize=undefined to detect undefined behavior.
-# To combine, separate with commas: -fsanitize=address,thread,undefined
+# Combine with commas: -fsanitize=address,thread,undefined	(didn't work for me)
 # The difference between -fno-omit-frame-pointer and -static-libasan is that
 # the first one is used to compile, while the second one is used to link.
 
@@ -61,6 +64,7 @@ all:	$(NAME)
 
 $(NAME):	$(OBJECTS)
 	$(COMPILE) $(FLAGS) $(OBJECTS) $(SANITIZER) -lpthread -o $(NAME)
+#	$(COMPILE) $(FLAGS) $(OBJECTS) -lpthread -o $(NAME)
 #	echo "$(GREEN)Pronto!$(DEFAULT) Execute $(WHITE)./philo convidados inanição\
 #	jantar sesta repeteco$(DEFAULT)"
 #	echo "\033[3mconvidados = número de filósofos à mesa"
@@ -96,10 +100,7 @@ run:	$(NAME)
 	./$(NAME) 4 500 200 2147483647
 
 vrun:	$(NAME)
-	valgrind --leak-check=full -s -v ./$(NAME) 5 800 200 200 7
-
-#sanitizer:	$(NAME)
-#	gcc -g -fsanitize=address -fno-omit-frame-pointer ./$(NAME) 4 200 210 200
+	$(VALGRIND) ./$(NAME) 5 800 200 200 7
 
 rerun:	re run
 

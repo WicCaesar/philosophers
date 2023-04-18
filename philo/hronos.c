@@ -6,7 +6,7 @@
 /*   By: cnascime <cnascime@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/14 07:37:17 by cnascime          #+#    #+#             */
-/*   Updated: 2023/04/18 09:08:08 by cnascime         ###   ########.fr       */
+/*   Updated: 2023/04/18 10:33:47 by cnascime         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,5 +84,6 @@ void	unloadmutexes(t_mutexes *mutexes, t_journal *philosopher)
 	pthread_mutex_destroy(&mutexes->printmutex);
 	pthread_mutex_destroy(&mutexes->bellymutex);
 	pthread_mutex_destroy(&mutexes->pulsemutex);
+	//pthread_mutex_destroy(&philosopher->forksmutex); // não muda nada?
 	clearpage(philosopher);
 }

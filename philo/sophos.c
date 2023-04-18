@@ -6,7 +6,7 @@
 /*   By: cnascime <cnascime@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/29 06:17:13 by cnascime          #+#    #+#             */
-/*   Updated: 2023/04/18 09:10:35 by cnascime         ###   ########.fr       */
+/*   Updated: 2023/04/18 10:31:52 by cnascime         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,6 +120,8 @@ int	main(int argc, char **argv)
 	journal = fillinguestlist(guests, timers, mutexes);
 	sitattable(guests, journal);
 	unloadmutexes(mutexes, journal);
+	free(timers);
+	free(mutexes);
 	return (0);
 }
 

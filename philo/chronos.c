@@ -6,15 +6,12 @@
 /*   By: cnascime <cnascime@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/14 07:37:17 by cnascime          #+#    #+#             */
-/*   Updated: 2023/04/18 10:47:02 by cnascime         ###   ########.fr       */
+/*   Updated: 2023/04/19 03:01:13 by cnascime         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "sophoi.h"
 #include <stdint.h>
-
-// TODO utils (calcular milissegundos)
-// ! renomear para chronos, dependendo das funções que entrem aqui
 
 // Converts the time in seconds and microseconds (usec) to miliseconds.
 long int	ms(void)
@@ -27,26 +24,24 @@ long int	ms(void)
 	return (miliseconds);
 }
 
-void	siesta(t_journal *philosopher, long int timer) // ! problema está aqui!
+void	siesta(t_journal *philosopher, long timer)
 {
 	long int	nap;
 
 	nap = ms() + timer;
-	while (ms() < nap) // enquanto não dormiu o tempo necessário
+	while (nap > ms())
 	{
-		if (takepulse(philosopher) == 0) // se o filósofo morreu no meio do sono
+		if (takepulse(philosopher) == 0)
 			break ;
+		usleep(500);
 	}
-	usleep(philosopher->timers->dining); // ! testar com mais
 }
 
 // If the philosopher died in the meantime, no false information is spread.
 // Otherwise, locks the mutex, prints the message, then unlocks the mutex.
-// ! tentar colocar isso dentro das próprias funções do ciclo de vida, talvez?
-// * NÃÃÃÃÃO!!! 
 void	inform(t_journal *philosopher, char *message)
 {
-	if (takepulse(philosopher) == 0) // !ao colocar isso posso estar impedindo a informação da morte chegar
+	if (takepulse(philosopher) == 0)
 		return ;
 	pthread_mutex_lock(&philosopher->mutexes->printmutex);
 	printf(message, ms() - philosopher->birth, philosopher->philosopher);
@@ -60,30 +55,34 @@ void	inform(t_journal *philosopher, char *message)
 // If the philosopher is not dead, returns 1 (there is a pulse).
 int	takepulse(t_journal *philosopher)
 {
-	pthread_mutex_lock(&philosopher->mutexes->pulsemutex); // tranca enquanto realiza as verificações abaixo
-	if (philosopher->mutexes->cantanymore == 1) // se ele já foi dado como morto
+	long int	id;
+
+	id = (long int)philosopher->philosopher;
+	pthread_mutex_lock(&philosopher->mutexes->pulsemutex);
+	if (philosopher->mutexes->cantanymore)
 	{
-		pthread_mutex_unlock(&philosopher->mutexes->pulsemutex); // destranca para não causar deadlock
-		return (0); // não há pulso
+		pthread_mutex_unlock(&philosopher->mutexes->pulsemutex);
+		return (0);
 	}
-	if (philosopher->death <= ms()) // se o tempo de morte for menor que o tempo atual // menor ou menor ou igual
+	if (philosopher->death <= ms())
 	{
-		philosopher->mutexes->cantanymore = 1; // ele é dado como morto (flag sobe)
-		pthread_mutex_unlock(&philosopher->mutexes->pulsemutex); // !reordenar para ser o último do if e testar
+		philosopher->mutexes->cantanymore = 1;
 		pthread_mutex_lock(&philosopher->mutexes->printmutex);
-		printf(DIED, ms() - philosopher->birth, philosopher->philosopher);
+		printf(DIED, ms() - philosopher->birth, id);
 		pthread_mutex_unlock(&philosopher->mutexes->printmutex);
-		return (0); // não há pulso
+		pthread_mutex_unlock(&philosopher->mutexes->pulsemutex);
+		return (0);
 	}
 	pthread_mutex_unlock(&philosopher->mutexes->pulsemutex);
-	return (1); // há pulso, filósofo está vivo
+	return (1);
 }
 
+// Destroy mutexes and frees allocations made on the philosophers' struct.
 void	unloadmutexes(t_mutexes *mutexes, t_journal *philosopher)
 {
 	pthread_mutex_destroy(&mutexes->printmutex);
 	pthread_mutex_destroy(&mutexes->bellymutex);
 	pthread_mutex_destroy(&mutexes->pulsemutex);
-	//pthread_mutex_destroy(&philosopher->forksmutex); // não muda nada?
+	pthread_mutex_destroy(&philosopher->forksmutex);
 	clearpage(philosopher);
 }

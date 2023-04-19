@@ -6,7 +6,7 @@
 /*   By: cnascime <cnascime@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 02:31:06 by cnascime          #+#    #+#             */
-/*   Updated: 2023/04/18 10:47:17 by cnascime         ###   ########.fr       */
+/*   Updated: 2023/04/18 22:34:22 by cnascime         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	addpage(t_journal **page, t_journal *newpage)
 }
 // Simpler syntax: lastpage(*page)->next = newpage;
 
-t_journal	*newpage(int id, t_timers *timers, t_mutexes *mutexes)
+t_journal	*newpage(long id, t_timers *timers, t_mutexes *mutexes)
 {
 	t_journal	*page;
 

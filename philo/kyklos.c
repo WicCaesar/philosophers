@@ -6,7 +6,7 @@
 /*   By: cnascime <cnascime@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 18:09:22 by cnascime          #+#    #+#             */
-/*   Updated: 2023/04/18 10:47:09 by cnascime         ###   ########.fr       */
+/*   Updated: 2023/04/19 02:44:18 by cnascime         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,64 +23,46 @@ void	*routine(void *journal)
 	philosopher = (t_journal *)journal;
 	philosopher->birth = ms();
 	philosopher->death = philosopher->birth + philosopher->timers->starvation;
-	if (philosopher->philosopher % 2 == 0)
-		usleep(philosopher->timers->dining * 1000); // pares dormem
-	// só os ímpares estão coisando
+	if ((long int)philosopher->philosopher % 2 == 0)
+		usleep(philosopher->timers->dining * 1000);
 	while (!philosopher->mutexes->cantanymore)
 	{
-		think(philosopher);
 		eat(philosopher);
-		returnforks(philosopher); // ! mover para eat?
-		if (fullbelly(philosopher)) // ! mover para eat?
+		returnforks(philosopher);
+		if (fullbelly(philosopher))
 			return (NULL);
 		dream(philosopher);
+		inform(philosopher, THINKS);
 	}
 	return (NULL);
 }
 //*The death variable stores the time at which the philosopher will die.
 // A philosopher dies if the time elapsed since the start of the simulation
 // is greater than the time it takes for starvation.
-//!The philosopher's death is checked every time he eats, sleeps or thinks.
+// The philosopher's death is checked every time they eat or sleep.
 // If the philosopher is dead, the simulation ends.
 // Part of the philosophers start eating, while others "sleep" for the same
 // time it takes them to eat, so the forks are available for the other round.
 
-/*
-thread init em todos
-contudo iniciar só filósofos pares (ou ímpares)
-pares pegam o garfo
-ímpar tem que dormir (o mesmo tempo que leva para comer)
-! só na primeira rodada
-pares vão dormir e ímpares vão pegar os garfos soltos
-*/
-
-// In this function, the philosopher attempts to take forks for eating.
-// If the philosopher is dead, the function returns 1.
-// If the philosopher is not dead, the function tries to take both forks.
-// If the philosopher is able to take both forks, the function returns 0.
-// If the philosopher is not able to take both forks, the function returns 1.
-// ! Atualizar acima, já está diferente (dividi em outras funções).
+// If the philosopher has two forks in their hand, they are able and must eat.
+// The number of meals is incremented and their death is postponed.
 void	eat(t_journal *philosopher)
 {
-	if (forksinhand(philosopher) != 2)
+	if (forksinhand(philosopher) < 2)
+	{
+		inform(philosopher, THINKS);
+		usleep(philosopher->timers->starvation * 1000);
 		return ;
+	}
 	inform(philosopher, EATS);
 	philosopher->meals++;
 	philosopher->death = ms() + philosopher->timers->starvation;
 	siesta(philosopher, philosopher->timers->dining);
-	return ;
 }
 
-// Not necessary anymore.
-void	think(t_journal *philosopher)
-{
-	inform(philosopher, THINKS);
-	return ;
-}
-
+// The philosopher rests after a meal. Do they also dream of electric sheep?
 void	dream(t_journal *philosopher)
 {
 	inform(philosopher, SLEEPS);
 	siesta(philosopher, philosopher->timers->dreaming);
-	return ;
 }

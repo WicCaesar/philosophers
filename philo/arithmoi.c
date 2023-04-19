@@ -6,13 +6,13 @@
 /*   By: cnascime <cnascime@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 01:54:08 by cnascime          #+#    #+#             */
-/*   Updated: 2023/04/18 10:46:56 by cnascime         ###   ########.fr       */
+/*   Updated: 2023/04/19 02:55:28 by cnascime         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "sophoi.h"
 
-// Simply checks if every argument is a valid number.
+// Simply checks if every argument is a valid number. Allows the plus sign.
 int	validation(int argc, char **argv)
 {
 	int	i;

@@ -37,16 +37,18 @@ REMOVE	= rm -f
 VALGRIND	= valgrind --leak-check=full -s -v --track-origins=yes
 # -s to suppress the summary, -v to show the full report.
 # --track-origins=yes to show where the memory was allocated.
-SANITIZER	= -fsanitize=thread -fno-omit-frame-pointer
-# -fsanitize=address to detect memory errors AND leaks.	(doesn't execute)
-# -fsanitize=memory to detect ONLY memory errors.	(MacOS only?)
+SANITIZER	= -fsanitize=address,thread -fno-omit-frame-pointer -static-libasan
+# -fsanitize=address to detect memory errors AND leaks.
+# -fsanitize=memory to detect ONLY memory errors.	(MacOS only)
 # -fsanitize=leak to detect ONLY memory leaks.			(executes program)
 # -fsanitize=thread to detect thread errors.
-# -fsanitize=integer to detect integer errors.		(MacOS only?)
+# -fsanitize=integer to detect integer errors.		(MacOS only)
 # -fsanitize=undefined to detect undefined behavior.
 # Combine with commas: -fsanitize=address,thread,undefined	(didn't work for me)
 # The difference between -fno-omit-frame-pointer and -static-libasan is that
 # the first one is used to compile, while the second one is used to link.
+# They are not mandatory, but they are recommended because they make the
+# error messages more accurate.
 
 # In order to pass an argument to the compiler, use the -D flag and set a
 # variable such as $(X) and when calling make, add X = 3, for instance.
@@ -63,8 +65,8 @@ SANITIZER	= -fsanitize=thread -fno-omit-frame-pointer
 all:	$(NAME)
 
 $(NAME):	$(OBJECTS)
-	$(COMPILE) $(FLAGS) $(OBJECTS) $(SANITIZER) -lpthread -o $(NAME)
-#	$(COMPILE) $(FLAGS) $(OBJECTS) -lpthread -o $(NAME)
+	$(COMPILE) $(FLAGS) $(OBJECTS) -lpthread -o $(NAME)
+#	$(COMPILE) $(FLAGS) $(OBJECTS) $(SANITIZER) -lpthread -o $(NAME)
 #	echo "$(GREEN)Pronto!$(DEFAULT) Execute $(WHITE)./philo convidados inanição\
 #	jantar sesta repeteco$(DEFAULT)"
 #	echo "\033[3mconvidados = número de filósofos à mesa"
@@ -120,4 +122,5 @@ rerun:	re run
 #./philo 4 2147483647 200 200 // Nobody dies
 #./philo 4 214748364732 200 200 // Invalid arguments
 #./philo 4 200 210 200 // One philosopher dies, information must come before 210
-#./philo 4 410 200 200 4 // One philosopher dies
+#./philo 4 210 200 200 4 // One philosopher dies
+#./philo 4 200 60 60 4 // Simulation stops when all philosophers eat 4 times

@@ -6,7 +6,7 @@
 /*   By: cnascime <cnascime@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/14 07:37:17 by cnascime          #+#    #+#             */
-/*   Updated: 2023/04/19 03:01:13 by cnascime         ###   ########.fr       */
+/*   Updated: 2023/05/22 11:29:21 by cnascime         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	siesta(t_journal *philosopher, long timer)
 	nap = ms() + timer;
 	while (nap > ms())
 	{
-		if (takepulse(philosopher) == 0)
+		if (takepulse(philosopher) == FAILURE)
 			break ;
 		usleep(500);
 	}
@@ -41,7 +41,7 @@ void	siesta(t_journal *philosopher, long timer)
 // Otherwise, locks the mutex, prints the message, then unlocks the mutex.
 void	inform(t_journal *philosopher, char *message)
 {
-	if (takepulse(philosopher) == 0)
+	if (takepulse(philosopher) == FAILURE)
 		return ;
 	pthread_mutex_lock(&philosopher->mutexes->printmutex);
 	printf(message, ms() - philosopher->birth, philosopher->philosopher);
@@ -62,19 +62,19 @@ int	takepulse(t_journal *philosopher)
 	if (philosopher->mutexes->cantanymore)
 	{
 		pthread_mutex_unlock(&philosopher->mutexes->pulsemutex);
-		return (0);
+		return (FAILURE);
 	}
 	if (philosopher->death <= ms())
 	{
-		philosopher->mutexes->cantanymore = 1;
+		philosopher->mutexes->cantanymore = TRUE;
 		pthread_mutex_lock(&philosopher->mutexes->printmutex);
 		printf(DIED, ms() - philosopher->birth, id);
 		pthread_mutex_unlock(&philosopher->mutexes->printmutex);
 		pthread_mutex_unlock(&philosopher->mutexes->pulsemutex);
-		return (0);
+		return (FAILURE);
 	}
 	pthread_mutex_unlock(&philosopher->mutexes->pulsemutex);
-	return (1);
+	return (SUCCESS);
 }
 
 // Destroy mutexes and frees allocations made on the philosophers' struct.

@@ -6,7 +6,7 @@
 /*   By: cnascime <cnascime@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/29 08:14:11 by cnascime          #+#    #+#             */
-/*   Updated: 2023/04/19 02:54:51 by cnascime         ###   ########.fr       */
+/*   Updated: 2023/05/22 11:13:39 by cnascime         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,29 @@
 # include <pthread.h> // pthread, mutex
 # include <sys/time.h> // gettimeofday
 
+//! COLOCAR DE NOVO DEPOIS DE AJEITAR TUDO
+/*
 # define THINKS "\033[3;36m%4ld %3ld is thinking\033[0m\n"
 # define HASAFORK "\033[2;3;32m%4ld %3ld has taken a fork\033[0m\n"
 # define EATS "\033[1;32m%4ld %3ld is eating\033[0m\n"
 # define SLEEPS "\033[2;37m%4ld %3ld is sleeping\033[0m\n"
 # define DIED "%4ld %3ld \033[1;31md\033[1;33mi\033[1;32me\033[1;35md\033[0m\n"
+# define SUCCESS 1
+# define FAILURE 0
+# define TRUE 1
+# define FALSE 0
+*/
+
+//! SÓ PARA TESTAR NO VISUALIZER, APAGAR DEPOIS
+# define THINKS		"\033[3;36m%ld %ld is thinking\033[0m\n"
+# define HASAFORK	"\033[2;3;32m%ld %ld has taken a fork\033[0m\n"
+# define EATS		"\033[1;32m%ld %ld is eating\033[0m\n"
+# define SLEEPS		"\033[2;37m%ld %ld is sleeping\033[0m\n"
+# define DIED		"%ld %ld \033[1;31md\033[1;33mi\033[1;32me\033[1;35md\033[0m\n"
+# define SUCCESS	1
+# define FAILURE	0
+# define TRUE		1
+# define FALSE		0
 
 typedef struct s_journal
 {
@@ -81,7 +99,7 @@ void		inform(t_journal *philosopher, char *message);
 void		think(t_journal *philosopher);
 void		eat(t_journal *philosopher);
 int			forksinhand(t_journal *philosopher);
-void		grabfork(t_journal *philosopher, t_journal *forkowner);
+int			grabfork(t_journal *philosopher, t_journal *forkowner);
 void		returnforks(t_journal *philosopher);
 int			fullbelly(t_journal *philosopher);
 void		dream(t_journal *philosopher);

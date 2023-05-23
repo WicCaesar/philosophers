@@ -6,7 +6,7 @@
 /*   By: cnascime <cnascime@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 01:54:08 by cnascime          #+#    #+#             */
-/*   Updated: 2023/04/19 02:55:28 by cnascime         ###   ########.fr       */
+/*   Updated: 2023/05/23 19:46:14 by cnascime         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,32 +20,32 @@ int	validation(int argc, char **argv)
 
 	i = 1;
 	if (argc < 5 || argc > 6)
-		return (0);
+		return (FAILURE);
 	while (i < argc)
 	{
 		j = 0;
 		if (!(argv[i][j] == '+' || (ft_isdigit(argv[i][j]))))
-			return (0);
+			return (FAILURE);
 		if (argv[i][0] == '+')
 			j++;
 		while (argv[i][j])
 		{
 			if (!(ft_isdigit(argv[i][j])))
-				return (0);
+				return (FAILURE);
 			j++;
 		}
 		if (ft_atoi(argv[i]) == 0)
 			return (0);
 		i++;
 	}
-	return (1);
+	return (SUCCESS);
 }
 
 int	ft_isdigit(int c)
 {
 	if (c >= '0' && c <= '9')
-		return (1);
-	return (0);
+		return (TRUE);
+	return (FALSE);
 }
 
 // 9 (TAB) \t horizontal tab
@@ -56,8 +56,8 @@ int	ft_isdigit(int c)
 int	ft_isspace(char c)
 {
 	if (c == ' ' || (c >= 9 && c <= 13))
-		return (1);
-	return (0);
+		return (TRUE);
+	return (FALSE);
 }
 
 int	ft_operator(const char *str)

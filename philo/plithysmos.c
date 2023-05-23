@@ -6,7 +6,7 @@
 /*   By: cnascime <cnascime@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 02:31:06 by cnascime          #+#    #+#             */
-/*   Updated: 2023/04/18 22:34:22 by cnascime         ###   ########.fr       */
+/*   Updated: 2023/05/23 18:53:02 by cnascime         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ t_journal	*newpage(long id, t_timers *timers, t_mutexes *mutexes)
 
 	page = malloc(sizeof(t_journal));
 	page->philosopher = (pthread_t)id;
-	page->hastheirownfork = 1;
 	page->timers = *&timers;
 	page->mutexes = *&mutexes;
 	pthread_mutex_init(&page->forksmutex, NULL);

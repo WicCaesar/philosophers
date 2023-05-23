@@ -6,7 +6,7 @@
 /*   By: cnascime <cnascime@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/14 07:05:15 by cnascime          #+#    #+#             */
-/*   Updated: 2023/05/22 11:26:21 by cnascime         ###   ########.fr       */
+/*   Updated: 2023/05/23 19:38:03 by cnascime         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,18 +23,8 @@ int	forksinhand(t_journal *philosopher)
 
 	forksinhand = 0;
 	if (philosopher->next != philosopher)
-	{
 		forksinhand += grabfork(philosopher, philosopher->next);
-		printf("%ld pegou o garfo do próximo (%ld).\n", philosopher->philosopher, philosopher->next->philosopher); // ! apagar
-	}
-	//forksinhand += grabfork(philosopher, philosopher);
-	// ! APAGAR if abaixo, manter acima
-	if (grabfork(philosopher, philosopher))
-	{
-		forksinhand++;
-		printf("%ld pegou o próprio garfo.\n", philosopher->philosopher); // ! apagar
-	}
-	printf("%d\n", forksinhand); // ! apagar
+	forksinhand += grabfork(philosopher, philosopher);
 	return (forksinhand);
 }
 
@@ -44,29 +34,15 @@ int	forksinhand(t_journal *philosopher)
 int	grabfork(t_journal *philosopher, t_journal *forkowner)
 {
 	pthread_mutex_lock(&forkowner->forksmutex);
-	if (forkowner->hastheirownfork == TRUE)
-	{
-		forkowner->hastheirownfork = FALSE;
-		inform(philosopher, HASAFORK);
-		pthread_mutex_unlock(&forkowner->forksmutex);
-		return (SUCCESS);
-	}
-	else
-		pthread_mutex_unlock(&forkowner->forksmutex);
-	return (FAILURE);
+	inform(philosopher, HASAFORK);
+	return (SUCCESS);
 }
 
 // Simply makes two philosophers have their own forks again.
 // Mutexes are used for safety reasons.
 void	returnforks(t_journal *philosopher)
 {
-	pthread_mutex_lock(&philosopher->forksmutex);
-	philosopher->hastheirownfork = TRUE;
-	printf("%ld devolveu o próprio garfo.\n", philosopher->philosopher); // ! apagar
 	pthread_mutex_unlock(&philosopher->forksmutex);
-	pthread_mutex_lock(&philosopher->next->forksmutex);
-	philosopher->next->hastheirownfork = TRUE;
-	printf("%ld devolveu o garfo do próximo.\n", philosopher->philosopher); // ! apagar
 	pthread_mutex_unlock(&philosopher->next->forksmutex);
 }
 

@@ -6,7 +6,7 @@
 /*   By: cnascime <cnascime@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/29 06:17:13 by cnascime          #+#    #+#             */
-/*   Updated: 2023/04/19 03:41:27 by cnascime         ###   ########.fr       */
+/*   Updated: 2023/05/23 19:43:09 by cnascime         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,18 +19,18 @@
 
 int	main(int argc, char **argv)
 {
-	int				guests;
-	t_timers		*timers;
-	t_mutexes		*mutexes;
-	t_journal		*journal;
+	int			guests;
+	t_timers	*timers;
+	t_mutexes	*mutexes;
+	t_journal	*journal;
 
-	if (validation(argc, argv) == 0)
-		return (0);
+	if (validation(argc, argv) == FAILURE)
+		return (FAILURE);
 	guests = ft_atoi(argv[1]);
 	timers = malloc(sizeof(t_timers));
 	mutexes = malloc(sizeof(t_mutexes));
-	if (loadtimers(guests, timers, argv) == 0)
-		return (0);
+	if (loadtimers(guests, timers, argv) == FAILURE)
+		return (FAILURE);
 	loadmutexes(guests, mutexes);
 	journal = fillinguestlist(guests, timers, mutexes);
 	sitattable(guests, journal);
@@ -48,16 +48,16 @@ int	loadtimers(int guests, t_timers *timers, char **argv)
 	timers->dreaming = ft_atoi(argv[4]);
 	if (guests < 1
 		|| timers->starvation < 1 || timers->dining < 1 || timers->dreaming < 1)
-		return (0);
+		return (FAILURE);
 	if (argv[5])
 	{
 		timers->mandatorymeals = ft_atoi(argv[5]);
 		if (timers->mandatorymeals < 1)
-			return (0);
+			return (FAILURE);
 	}
 	else
 		timers->mandatorymeals = -1;
-	return (1);
+	return (SUCCESS);
 }
 
 // Initialising mutexes.
